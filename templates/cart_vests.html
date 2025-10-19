@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Корзина бронежилетов</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-4">
+<h1>Корзина бронежилетов</h1>
+
+{% if items %}
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Фото</th>
+        <th>Модель</th>
+        <th>Защита</th>
+        <th>Вес</th>
+        <th>Цена</th>
+        <th>Действие</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% set total = 0 %}
+    {% for item in items %}
+    <tr>
+        <td>
+            {% if item['image'] %}
+            <img src="{{ request.url_for('static', path=item['image']) }}" alt="Фото" style="width:80px;">
+            {% else %}
+            <img src="{{ request.url_for('static', path='no-image.png') }}" alt="Нет фото" style="width:80px;">
+            {% endif %}
+        </td>
+        <td>{{ item.model }}</td>
+        <td>{{ item.protection_level }}</td>
+        <td>{{ item.weight }} кг</td>
+        <td>{{ item.price }} грн</td>
+        <td>
+            <form action="{{ request.url_for('remove_vest_from_cart', vest_id=item['id']) }}" method="post">
+                <button type="submit" class="btn btn-danger btn-sm">❌ Удалить</button>
+            </form>
+        </td>
+
+    </tr>
+    {% set total = total + item.price %}
+    {% endfor %}
+    </tbody>
+</table>
+
+<p><strong>Итого: {{ total }} грн</strong></p>
+
+<form action="{{ request.url_for('checkout_vests') }}" method="post">
+    <button type="submit" class="btn btn-success">🛒 Оформить заказ</button>
+</form>
+
+{% else %}
+<p>Корзина пуста.</p>
+{% endif %}
+
+</body>
+</html>

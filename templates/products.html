@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список патронов</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .description-content {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.35s ease, opacity 0.35s ease;
+            margin-top: 8px;
+            color: var(--text-primary, #d2d2d2);
+            font-size: 14.5px;
+        }
+        .description-content.open {
+            max-height: 400px;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="container mt-4">
+<h1 class="mb-4">Список патронов</h1>
+
+<div class="mb-3 d-flex gap-2">
+    <a href="/" class="btn btn-secondary">На главную</a>
+    {% if role == 'admin' %}
+    <a href="/add_product" class="btn btn-primary">Добавить патрон</a>
+    {% endif %}
+</div>
+
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-5">
+        <input type="text" name="caliber" class="form-control" placeholder="Калибр (например, 7.62x39)"
+               value="{{ request.query_params.get('caliber', '') }}">
+    </div>
+    <div class="col-md-5">
+        <input type="text" name="ammo_type" class="form-control" placeholder="Тип (например, AP)"
+               value="{{ request.query_params.get('ammo_type', '') }}">
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-success w-100">Фильтровать</button>
+    </div>
+</form>
+
+{% if items %}
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for item in items %}
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+            {% if item['image'] %}
+            <img src="{{ request.url_for('static', path=item['image']) }}" class="card-img-top" alt="Фото патрона">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ item['designation'] }} ({{ item['caliber'] }})</h5>
+                <p class="card-text">
+                    <strong>Тип:</strong> {{ item['ammo_type'] }}<br>
+                    <strong>Бронепробитие:</strong> {{ item['penetration'] }}<br>
+                    <strong>Цена за выстрел:</strong> {{ item['price'] }} грн<br>
+                    <strong>Фрагментация:</strong> {{ item['fragmentation'] }}%<br>
+                    <strong>Наличие:</strong>
+                    {% if item['availability_status'] == 'in_stock' %}
+                        В наличии
+                    {% elif item['availability_status'] == 'out_of_stock' %}
+                        Нет в наличии
+                    {% else %}
+                        Завоз через {{ item['restock_hours'] }} часов
+                    {% endif %}
+                </p>
+                {% if item['description'] %}
+                <button type="button" class="btn btn-sm btn-outline-secondary mb-2"
+                        onclick="toggleDescription('desc-{{ loop.index }}')">Подробнее
+                </button>
+                <div id="desc-{{ loop.index }}" class="description-content">{{ item['description'] }}</div>
+                {% endif %}
+
+                <form action="{{ url_for('add_to_cart', product_id=item['id']) }}" method="post" class="mt-3">
+                    <button type="submit" class="btn btn-primary w-100">Добавить в корзину</button>
+                </form>
+
+                {% if role == 'admin' %}
+                <form action="{{ url_for('delete_product', product_id=item['id']) }}" method="post" class="mt-2">
+                    <button type="submit" class="btn btn-danger w-100"
+                            onclick="return confirm('Точно удалить этот патрон?');">
+                        Удалить товар
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>Патроны не найдены.</p>
+{% endif %}
+
+<script>
+    function toggleDescription(id) {
+        const el = document.getElementById(id);
+        el.classList.toggle('open');
+    }
+</script>
+
+</body>
+</html>

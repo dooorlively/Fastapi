@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Бронежилеты</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="container mt-4">
+
+<h1 class="mb-4">Бронежилеты</h1>
+
+<div class="mb-3 d-flex gap-2 flex-wrap">
+    <a href="/" class="btn btn-secondary">Главная</a>
+    <a href="{{ request.url_for('cart_vests') }}" class="btn btn-outline-primary">Корзина бронежилетов</a>
+    {% if role == 'admin' %}
+    <a href="/add_vest" class="btn btn-primary">Добавить бронежилет</a>
+    {% endif %}
+</div>
+
+{% if flash %}
+<div class="alert alert-info">{{ flash }}</div>
+{% endif %}
+
+{% if vests %}
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for vest in vests %}
+    <div class="col">
+        <div class="card h-100 shadow-sm border-0">
+            {% if vest['image'] %}
+            <img src="{{ request.url_for('static', path=vest['image']) }}" class="card-img-top" alt="Фото бронежилета">
+            {% else %}
+            <img src="/static/no-image.png" class="card-img-top" alt="Нет фото">
+            {% endif %}
+
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ vest['model'] }}</h5>
+
+                <ul class="list-unstyled mb-2 small">
+                    <li><strong>Уровень защиты:</strong> {{ vest['protection_level'] }}</li>
+                    <li><strong>Вес:</strong> {{ vest['weight'] }} кг</li>
+                    <li><strong>Цена:</strong> {{ vest['price'] }} грн</li>
+                    <li>
+                        <strong>Наличие:</strong>
+                        {% if vest['availability_status'] == 'in_stock' %}
+                            <span class="text-success">В наличии</span>
+                        {% elif vest['availability_status'] == 'out_of_stock' %}
+                            <span class="text-danger">Нет в наличии</span>
+                        {% else %}
+                            Завоз через {{ vest['restock_hours'] }} ч
+                        {% endif %}
+                    </li>
+                </ul>
+
+                {% if vest['description'] %}
+                <p class="mb-3">{{ vest['description'] }}</p>
+                {% endif %}
+
+                <div class="mt-auto d-flex gap-2">
+                    <!-- ДОБАВИТЬ В КОРЗИНУ (POST /add_vest_to_cart/{vest_id}) -->
+                    <form action="{{ request.url_for('add_vest_to_cart', vest_id=vest['id']) }}" method="post" class="flex-grow-1">
+                        <button type="submit"
+                                class="btn btn-success w-100"
+                                {% if vest['availability_status'] == 'out_of_stock' %}disabled{% endif %}>
+                            ➕ Добавить в корзину
+                        </button>
+                    </form>
+
+                    {% if role == 'admin' %}
+                    <form action="{{ request.url_for('delete_vest', vest_id=vest['id']) }}" method="post"
+                          onsubmit="return confirm('Удалить этот бронежилет?');">
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </form>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="text-muted">Бронежилеты не найдены.</p>
+{% endif %}
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить патрон</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="container mt-5">
+<h1 class="mb-4">Добавить патрон</h1>
+<form method="post" enctype="multipart/form-data" class="row g-3">
+
+    <div class="col-md-6">
+        <label class="form-label">Калибр</label>
+        <input type="text" name="caliber" class="form-control" placeholder="например, 5.45x39" required>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Тип</label>
+        <input type="text" name="ammo_type" class="form-control" placeholder="например, бронебойный" required>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Обозначение</label>
+        <input type="text" name="designation" class="form-control" placeholder="например, 7Н39" required>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Бронепробитие</label>
+        <input type="number" name="penetration" class="form-control" step="1" placeholder="в условных единицах"
+               required>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Цена за выстрел</label>
+        <input type="number" name="price" class="form-control" step="0.01" placeholder="в гривнах" required>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Шанс фрагментации (%)</label>
+        <input type="number" name="fragmentation" class="form-control" step="0.1" min="0" max="100"
+               placeholder="например, 15.5" required>
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Изображение</label>
+        <input type="file" name="image" class="form-control" accept="image/*">
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Описание</label>
+        <textarea name="description" class="form-control" rows="4"
+                  placeholder="Введите подробное описание патрона..."></textarea>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Наличие</label>
+        <select name="availability_status" class="form-select">
+            <option value="in_stock">В наличии</option>
+            <option value="out_of_stock">Нет в наличии</option>
+            <option value="restocking">Завоз через N часов</option>
+        </select>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Через сколько часов завоз?</label>
+        <input type="number" name="restock_hours" class="form-control" placeholder="Только если выбран завоз">
+    </div>
+
+    <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-primary">Добавить</button>
+        <a href="/" class="btn btn-secondary ms-2">Назад</a>
+    </div>
+</form>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить бронежилет</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="container mt-5">
+
+<h1 class="mb-4">Добавить бронежилет</h1>
+
+<form method="post" enctype="multipart/form-data" class="row g-3">
+    <div class="col-md-6">
+        <label class="form-label">Модель</label>
+        <input type="text" name="model" class="form-control" placeholder="например, 6B23" required>
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Уровень защиты</label>
+        <input type="text" name="protection_level" class="form-control" placeholder="например, NIJ IIIA" required>
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Вес (кг)</label>
+        <input type="number" step="0.1" name="weight" class="form-control" placeholder="например, 8.5" required>
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Цена (грн)</label>
+        <input type="number" step="0.01" name="price" class="form-control" placeholder="например, 12000" required>
+    </div>
+    <div class="col-12">
+        <label class="form-label">Изображение</label>
+        <input type="file" name="image" class="form-control" accept="image/*">
+    </div>
+    <div class="col-12">
+        <label class="form-label">Описание</label>
+        <textarea name="description" class="form-control" rows="4" placeholder="Подробное описание бронежилета..."></textarea>
+    </div>
+    <div class="col-6">
+        <label class="form-label">Статус наличия</label>
+        <select name="availability_status" class="form-select" required>
+            <option value="in_stock" selected>В наличии</option>
+            <option value="out_of_stock">Нет в наличии</option>
+            <option value="restocking">Завоз</option>
+        </select>
+    </div>
+    <div class="col-6">
+        <label class="form-label">Завоз через (часы)</label>
+        <input type="number" name="restock_hours" class="form-control" placeholder="если применимо">
+    </div>
+
+    <!-- Кнопка теперь всегда отображается -->
+    <div class="col-12 mt-3">
+        <button type="submit" class="btn btn-primary">Добавить бронежилет</button>
+    </div>
+
+    <div class="col-12 mt-2">
+        <a href="/vests" class="btn btn-secondary">Назад</a>
+    </div>
+</form>
+
+</body>
+</html>

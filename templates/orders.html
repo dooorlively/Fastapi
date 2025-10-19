@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8"/>
+    <title>История заказов</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="container py-4">
+<h2>История заказов</h2>
+
+{% if orders %}
+    {% for order in orders %}
+    <div class="order-block mb-4 p-3 border rounded">
+        <h3>Заказ №{{ order['order_id'] }}</h3>
+        <p>Дата: {{ order['created_at'] }}</p>
+
+        {% for item in order['items'] %}
+        <p>
+            <strong>Товар:</strong> {{ item['name'] }}<br>
+            {% if item['image'] %}
+            <img src="{{ request.url_for('static', path=item['image']) }}" alt="{{ item['name'] }}"
+                 style="max-width: 150px; border: 1px solid #444; border-radius: 4px; margin-top: 10px;">
+            {% endif %}
+            <br>Кол-во: {{ item['quantity'] }}<br>
+            Цена за штуку: {{ item['price_at_time'] }} грн<br>
+            <strong>Итого:</strong> {{ ((item['quantity'] or 0) * (item['price_at_time'] or 0)) | round(2) }} грн
+
+        </p>
+        {% endfor %}
+
+        <p><strong>Сумма заказа:</strong> {{ order['total'] | round(2) }} грн</p>
+    </div>
+    {% endfor %}
+{% else %}
+<p>Вы ещё ничего не заказывали.</p>
+{% endif %}
+
+<a href="{{ url_for('profile') }}" class="btn btn-secondary mt-3">Назад в профиль</a>
+</body>
+</html>

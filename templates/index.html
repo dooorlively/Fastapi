@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="container py-4">
+
+<h1 class="mb-4">Главная страница</h1>
+
+{% if session.user %}
+<p>Привет, {{ session.user }} | <a href="/logout">Выйти</a></p>
+{% else %}
+<a href="/login" class="btn btn-outline-primary me-2">Вход</a>
+<a href="/register" class="btn btn-outline-success me-2">Регистрация</a>
+{% endif %}
+
+<div class="my-3">
+    <a href="/about" class="btn btn-secondary me-2">О нас</a>
+    <a href="{{ url_for(request, 'profile') }}" class="btn btn-dark me-2">Профиль</a>
+</div>
+
+<div class="my-4">
+    <h4>Патроны</h4>
+    {% if session.role == "admin" %}
+    <a href="{{ url_for(request, 'add_product') }}" class="btn btn-outline-light mb-2 me-2">➕ Добавить патроны</a>
+    {% endif %}
+    <a href="{{ request.url_for('products') }}" class="btn btn-outline-info mb-2">📦 Посмотреть патроны</a>
+</div>
+
+<div class="my-4">
+    <h4>Бронежилеты</h4>
+    {% if session.role == "admin" %}
+    <a href="{{ url_for(request, 'add_vest') }}" class="btn btn-outline-light mb-2 me-2">➕ Добавить бронежилет</a>
+    {% endif %}
+    <a href="{{ url_for(request, 'vests') }}" class="btn btn-outline-info mb-2">🛡️ Посмотреть бронежилеты</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>Профиль пользователя</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="container py-4">
+<h1>Профиль</h1>
+
+{% if session.get('user') %}
+<p>Вы вошли как <strong>{{ session.get('user') }}</strong> | <a href="/logout">Выйти</a></p>
+{% else %}
+<p><a href="/login">Войти</a> или <a href="/register">Зарегистрироваться</a></p>
+{% endif %}
+
+<a href="/orders" class="btn btn-primary mt-3">История заказов</a>
+<a href="/" class="btn btn-secondary mt-3">На главную</a>
+
+</body>
+</html>
